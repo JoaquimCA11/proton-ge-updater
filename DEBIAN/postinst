@@ -1,26 +1,9 @@
 #!/bin/bash
 set -e
 
-USER_HOME="$(eval echo ~$(logname))"
-USER_NAME="$(logname)"
-
-# Caminho do systemd do usuário
-SYSTEMD_USER_DIR="$USER_HOME/.config/systemd/user"
-
-mkdir -p "$SYSTEMD_USER_DIR"
-
-install -m 644 /usr/lib/systemd/user/proton-ge-update.service "$SYSTEMD_USER_DIR/"
-install -m 644 /usr/lib/systemd/user/proton-ge-update.timer "$SYSTEMD_USER_DIR/"
-
-# Permitir systemd user rodar mesmo sem login
-loginctl enable-linger "$USER_NAME"
-
-# Reload do systemd de usuário (sem falhar caso não exista sessão)
-sudo -u "$USER_NAME" systemctl --user daemon-reload || true
-
-# Habilitar o timer quando a sessão existir
-sudo -u "$USER_NAME" systemctl --user enable proton-ge-update.timer || true
-sudo -u "$USER_NAME" systemctl --user start proton-ge-update.timer || true
+# Habilita o timer para todos usuários
+systemctl --global enable proton-ge-update.timer || true
+systemctl --global enable proton-ge-update.service || true
 
 exit 0
 
