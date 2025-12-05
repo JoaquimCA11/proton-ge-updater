@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -e
+
+systemctl --user daemon-reload
+systemctl --user enable --now proton-ge-update.timer || true
+
+exit 0

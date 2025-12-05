@@ -1,0 +1,6 @@
+[Unit]
+Description=Atualizador automático do Proton GE
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/update-proton-ge.sh

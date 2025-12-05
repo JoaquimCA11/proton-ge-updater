@@ -1,0 +1,10 @@
+[Unit]
+Description=Timer semanal para atualizar Proton GE
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+Unit=proton-ge-update.service
+
+[Install]
+WantedBy=default.target
