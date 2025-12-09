@@ -1,9 +1,13 @@
 #!/bin/bash
 set -e
 
-# Habilita o timer para todos usuários
-systemctl --global enable proton-ge-update.timer || true
-systemctl --global enable proton-ge-update.service || true
+# Habilita o timer do sistema
+systemctl enable proton-ge-update.timer || true
+
+# Não é necessário habilitar o .service manualmente —
+# o .timer chama ele automaticamente.
+# Mas não faz mal deixá-lo:
+systemctl enable proton-ge-update.service || true
 
 exit 0
 

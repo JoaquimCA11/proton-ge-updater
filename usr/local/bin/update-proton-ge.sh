@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# LISTA DE POSSÍVEIS PASTAS DO STEAM PROTON
 CANDIDATES=(
     "$HOME/.steam/root/compatibilitytools.d"
     "$HOME/.local/share/Steam/compatibilitytools.d"
@@ -9,41 +8,36 @@ CANDIDATES=(
 )
 
 DEST=""
-
-# PROCURA A PRIMEIRA PASTA QUE EXISTE
 for dir in "${CANDIDATES[@]}"; do
-    if [ -d "$dir" ]; then
-        DEST="$dir"
-        break
-    fi
+    [ -d "$dir" ] && DEST="$dir" && break
 done
 
-# SE NENHUMA EXISTE, CRIAR A PRIMEIRA OPÇÃO
-if [ -z "$DEST" ]; then
-    DEST="${CANDIDATES[0]}"
-    mkdir -p "$DEST"
-fi
+[ -z "$DEST" ] && DEST="${CANDIDATES[0]}" && mkdir -p "$DEST"
 
 echo "Pasta de instalação detectada: $DEST"
 
-# ------------------------------------------------------
-# DAQUI PRA BAIXO CONTINUA O SCRIPT DE DOWNLOAD/UPDATE
-# ------------------------------------------------------
-
-LATEST=$(curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest)
+# --- DOWNLOAD DA RELEASE ---
+LATEST=$(curl -H "User-Agent: curl" -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest)
 VERSION=$(echo "$LATEST" | grep tag_name | cut -d '"' -f 4)
-TARGET_DIR="$DEST/$VERSION"
 
-if [ -d "$TARGET_DIR" ]; then
-    echo "Já existe a versão $VERSION instalada. Nada a fazer."
-    exit 0
+URL=$(echo "$LATEST" \
+    | grep browser_download_url \
+    | grep ".tar.gz" \
+    | head -n 1 \
+    | cut -d '"' -f 4)
+
+if [ -z "$URL" ]; then
+    echo "❌ ERRO: GitHub não retornou link de download. Tente novamente."
+    exit 1
 fi
 
-URL=$(echo "$LATEST" | grep browser_download_url | grep tar.gz | cut -d '"' -f 4)
-
+echo "Baixando $VERSION..."
 curl -L "$URL" -o /tmp/proton-ge.tar.gz
+
+echo "Extraindo..."
 tar -xvf /tmp/proton-ge.tar.gz -C "$DEST"
 rm /tmp/proton-ge.tar.gz
 
 notify-send "Proton GE atualizado" "Nova versão instalada: $VERSION"
+echo "✔ Instalação concluída!"
 
