@@ -1,7 +1,0 @@
-#!/bin/bash
-set -e
-
-systemctl enable --now proton-ge-update.timer || true
-
-exit 0
-

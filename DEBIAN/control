@@ -1,8 +1,0 @@
-Package: proton-ge-updater
-Version: 1.0
-Section: utils
-Priority: optional
-Architecture: all
-Maintainer: Joaquim Arraes <joaquim@gmail.com>
-Description: Atualizador automático do Proton GE para Steam
- Instala script + systemd-service + timer que verifica nova versão semanalmente.

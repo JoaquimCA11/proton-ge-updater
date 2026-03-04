@@ -1,4 +1,3 @@
 # proton-ge-updater
 
-Para baixar:
-sudo dpkg -i proton-ge-updater.deb
+Script para baixar a versão mais atual do proton-ge na steam
